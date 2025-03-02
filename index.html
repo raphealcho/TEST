@@ -3,6 +3,13 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="영양제 섭취량 및 과다 복용 여부를 확인할 수 있는 건강 계산기. 개인별 맞춤 복용량을 추천합니다.">
+    <meta name="keywords" content="영양제, 건강기능식품, 비타민, 섭취량 계산, 과다 복용, 건강 계산기">
+    <meta name="author" content="공잘남">
+    <meta property="og:title" content="영양제 섭취량 & 과다 복용 계산기">
+    <meta property="og:description" content="영양제 섭취량을 계산하고 적절한 복용량을 추천받으세요.">
+    <meta property="og:image" content="https://yourwebsite.com/image.jpg">
+    <meta property="og:url" content="https://yourwebsite.com">
     <title>영양제 섭취량 & 과다 복용 계산기</title>
     <style>
         body {
@@ -27,90 +34,32 @@
             color: red;
             font-weight: bold;
         }
-        .input-group {
-            margin-bottom: 15px;
-            text-align: left;
-        }
-        label {
-            font-weight: bold;
-        }
-        input, select {
-            width: 100%;
-            padding: 8px;
-            margin-top: 5px;
-            border-radius: 5px;
-            border: 1px solid #ddd;
-        }
-        button {
-            background-color: #28a745;
-            color: white;
-            border: none;
-            padding: 10px;
-            width: 100%;
-            border-radius: 5px;
-            cursor: pointer;
-        }
-        button:hover {
-            background-color: #218838;
-        }
         .link-container {
             margin-top: 20px;
         }
         .link-container button {
             margin: 5px;
             background-color: #007bff;
+            color: white;
+            border: none;
+            padding: 10px;
+            border-radius: 5px;
+            cursor: pointer;
+        }
+        .link-container button:hover {
+            background-color: #0056b3;
         }
     </style>
 </head>
 <body>
     <div class="container">
         <h2>영양제 섭취량 & 과다 복용 계산기</h2>
-        <div class="input-group">
-            <label for="age">나이:</label>
-            <input type="number" id="age" placeholder="나이 입력">
-        </div>
-        <div class="input-group">
-            <label for="gender">성별:</label>
-            <select id="gender">
-                <option value="male">남성</option>
-                <option value="female">여성</option>
-            </select>
-        </div>
-        <div class="input-group">
-            <label for="weight">몸무게 (kg):</label>
-            <input type="number" id="weight" placeholder="몸무게 입력">
-        </div>
-        <div class="input-group" id="supplement-container">
-            <label>영양제 선택 및 복용량:</label>
-            <button onclick="addSupplement()">+ 영양제 추가</button>
-        </div>
         <button onclick="calculateOverdose()">계산하기</button>
         <div id="result" class="result"></div>
         <div class="link-container" id="recommend-links"></div>
     </div>
 
     <script>
-        function addSupplement() {
-            let container = document.getElementById("supplement-container");
-            let div = document.createElement("div");
-            div.classList.add("input-group");
-            div.innerHTML = `
-                <select class="supplement">
-                    <option value="vitaminC">비타민 C</option>
-                    <option value="vitaminD">비타민 D</option>
-                    <option value="calcium">칼슘</option>
-                    <option value="iron">철분</option>
-                    <option value="magnesium">마그네슘</option>
-                    <option value="zinc">아연</option>
-                    <option value="omega3">오메가3</option>
-                    <option value="fiber">식이섬유</option>
-                    <option value="probiotics">프로바이오틱스</option>
-                </select>
-                <input type="number" class="intake" placeholder="섭취량 (mg) 입력">
-            `;
-            container.appendChild(div);
-        }
-
         function calculateOverdose() {
             let resultDiv = document.getElementById("result");
             resultDiv.innerHTML = "✅ 계산 완료!";
