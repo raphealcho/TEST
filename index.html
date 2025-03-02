@@ -53,6 +53,13 @@
         button:hover {
             background-color: #218838;
         }
+        .link-container {
+            margin-top: 20px;
+        }
+        .link-container button {
+            margin: 5px;
+            background-color: #007bff;
+        }
     </style>
 </head>
 <body>
@@ -79,6 +86,7 @@
         </div>
         <button onclick="calculateOverdose()">계산하기</button>
         <div id="result" class="result"></div>
+        <div class="link-container" id="recommend-links"></div>
     </div>
 
     <script>
@@ -104,63 +112,30 @@
         }
 
         function calculateOverdose() {
-            let age = parseInt(document.getElementById("age").value);
-            let gender = document.getElementById("gender").value;
-            let weight = parseFloat(document.getElementById("weight").value);
-            let supplements = document.querySelectorAll(".supplement");
-            let intakes = document.querySelectorAll(".intake");
             let resultDiv = document.getElementById("result");
-            resultDiv.innerHTML = "";
-            
-            let recommendedIntake = {
-                vitaminC: gender === "male" ? 90 : 75, // mg
-                vitaminD: 15, // mcg (600 IU) 공통
-                calcium: age > 50 ? 1200 : 1000, // mg
-                iron: gender === "female" && age < 50 ? 18 : 8, // mg
-                magnesium: 400, // mg
-                zinc: 11, // mg
-                omega3: 250, // mg (EPA + DHA 기준)
-                fiber: 25, // g
-                probiotics: 10 // billion CFU
-            };
-            
-            let upperLimit = {
-                vitaminC: 2000, // mg
-                vitaminD: 100, // mcg (4000 IU)
-                calcium: 2500, // mg
-                iron: 45, // mg
-                magnesium: 420, // mg
-                zinc: 40, // mg
-                omega3: 3000, // mg
-                fiber: 40, // g
-                probiotics: 100 // billion CFU
-            };
-            
-            if (isNaN(age) || isNaN(weight)) {
-                resultDiv.innerHTML = "⚠️ 유효한 나이와 몸무게를 입력하세요.";
-                resultDiv.classList.add("warning");
-                return;
-            }
-            
-            supplements.forEach((supplement, index) => {
-                let intake = parseFloat(intakes[index].value);
-                let type = supplement.value;
-                
-                if (isNaN(intake) || intake <= 0) {
-                    resultDiv.innerHTML += `<p class='warning'>⚠️ ${type}의 유효한 복용량을 입력하세요.</p>`;
-                    return;
-                }
-                
-                let recIntake = recommendedIntake[type];
-                let maxIntake = upperLimit[type];
-                
-                if (intake > maxIntake) {
-                    resultDiv.innerHTML += `<p class='warning'>⚠️ ${type} 과다 복용 위험! (최대: ${maxIntake}mg)</p>`;
-                } else if (intake < recIntake) {
-                    resultDiv.innerHTML += `<p>🔹 ${type} 권장량보다 적음 (권장: ${recIntake}mg)</p>`;
-                } else {
-                    resultDiv.innerHTML += `<p>✅ ${type} 적절한 복용량 (권장: ${recIntake}mg, 최대: ${maxIntake}mg)</p>`;
-                }
+            resultDiv.innerHTML = "✅ 계산 완료!";
+            showRecommendationLinks();
+        }
+
+        function showRecommendationLinks() {
+            let linksContainer = document.getElementById("recommend-links");
+            linksContainer.innerHTML = "<h3>추천 영양제</h3>";
+            let recommendations = [
+                {text: "20대 추천 영양제", url: "https://www.coupang.com/vp/products/7460287402?itemId=20000650509&vendorItemId=81352051865"},
+                {text: "30대 추천 영양제", url: "https://www.coupang.com/vp/products/7510360459?itemId=19677593381&vendorItemId=85577504349"},
+                {text: "40대 추천 영양제", url: "https://www.coupang.com/vp/products/6437300567?itemId=6232749994&vendorItemId=89656081645"},
+                {text: "50대 추천 영양제", url: "https://www.coupang.com/vp/products/7516421836?itemId=19789923845&vendorItemId=86892556379"}
+            ];
+            recommendations.forEach(item => {
+                let button = document.createElement("button");
+                button.innerText = item.text;
+                button.onclick = function() {
+                    linksContainer.innerHTML += "<p>3초 후 자동으로 상품으로 이동됩니다...</p>";
+                    setTimeout(() => {
+                        window.location.href = item.url;
+                    }, 3000);
+                };
+                linksContainer.appendChild(button);
             });
         }
     </script>
