@@ -98,25 +98,42 @@
     </div>
 
     <script>
+        const recommendedIntake = {
+            vitaminC: 90,
+            vitaminD: 15,
+            calcium: 1000,
+            iron: 18,
+            magnesium: 400,
+            zinc: 11,
+            omega3: 250,
+            fiber: 25,
+            probiotics: 10
+        };
+
         function addSupplement() {
             let container = document.getElementById("supplement-container");
             let div = document.createElement("div");
             div.classList.add("input-group");
             div.innerHTML = `
                 <select class="supplement">
-                    <option value="vitaminC">비타민 C (Vitamin C)</option>
-                    <option value="vitaminD">비타민 D (Vitamin D)</option>
-                    <option value="calcium">칼슘 (Calcium)</option>
-                    <option value="iron">철분 (Iron)</option>
-                    <option value="magnesium">마그네슘 (Magnesium)</option>
-                    <option value="zinc">아연 (Zinc)</option>
-                    <option value="omega3">오메가3 (Omega-3)</option>
-                    <option value="fiber">식이섬유 (Fiber)</option>
-                    <option value="probiotics">프로바이오틱스 (Probiotics)</option>
+                    ${Object.keys(recommendedIntake).map(nutrient => `<option value="${nutrient}">${nutrient.toUpperCase()}</option>`).join('')}
                 </select>
                 <input type="number" class="intake" placeholder="섭취량 (mg) 입력">
             `;
             container.appendChild(div);
+        }
+
+        function calculateOverdose() {
+            let resultDiv = document.getElementById("result");
+            resultDiv.innerHTML = "✅ 권장 섭취량 결과:";
+            document.querySelectorAll(".supplement").forEach((supplement, index) => {
+                let intake = parseFloat(document.querySelectorAll(".intake")[index].value);
+                let nutrient = supplement.value;
+                let recommended = recommendedIntake[nutrient];
+                let status = intake > recommended ? "🔴 과다 복용" : intake < recommended ? "🟡 부족" : "🟢 적정";
+                resultDiv.innerHTML += `<p>${nutrient.toUpperCase()}: ${intake} mg (${status})</p>`;
+            });
+            showRecommendationLinks();
         }
 
         function showRecommendationLinks() {
@@ -133,8 +150,9 @@
                 button.innerText = item.text;
                 button.onclick = function() {
                     let countdown = 3;
+                    button.innerText = "3초 후에 추천 상품으로 이동합니다";
                     let interval = setInterval(() => {
-                        button.innerText = `${item.text} (${countdown}초)`;
+                        button.innerText = `3초 후에 추천 상품으로 이동합니다 (${countdown}초)`;
                         countdown--;
                         if (countdown < 0) {
                             clearInterval(interval);
