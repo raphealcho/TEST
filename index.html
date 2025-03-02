@@ -99,6 +99,14 @@
     </div>
 
     <script>
+        // 각 영양소에 대한 권장 섭취량을 정의하는 객체
+        const recommendedIntake = {
+            "비타민C": { name: "비타민 C", value: 1000 },
+            "비타민D": { name: "비타민 D", value: 800 },
+            "칼슘": { name: "칼슘", value: 1200 },
+            "철분": { name: "철분", value: 18 }
+        };
+
         // 새롭게 영양제 선택 및 복용량 입력 필드를 추가하는 함수
         function addSupplement() {
             const container = document.getElementById('supplement-container');
