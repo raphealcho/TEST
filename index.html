@@ -92,6 +92,11 @@
                     <option value="vitaminD">비타민 D</option>
                     <option value="calcium">칼슘</option>
                     <option value="iron">철분</option>
+                    <option value="magnesium">마그네슘</option>
+                    <option value="zinc">아연</option>
+                    <option value="omega3">오메가3</option>
+                    <option value="fiber">식이섬유</option>
+                    <option value="probiotics">프로바이오틱스</option>
                 </select>
                 <input type="number" class="intake" placeholder="섭취량 (mg) 입력">
             `;
@@ -111,14 +116,24 @@
                 vitaminC: gender === "male" ? 90 : 75, // mg
                 vitaminD: 15, // mcg (600 IU) 공통
                 calcium: age > 50 ? 1200 : 1000, // mg
-                iron: gender === "female" && age < 50 ? 18 : 8 // mg
+                iron: gender === "female" && age < 50 ? 18 : 8, // mg
+                magnesium: 400, // mg
+                zinc: 11, // mg
+                omega3: 250, // mg (EPA + DHA 기준)
+                fiber: 25, // g
+                probiotics: 10 // billion CFU
             };
             
             let upperLimit = {
                 vitaminC: 2000, // mg
                 vitaminD: 100, // mcg (4000 IU)
                 calcium: 2500, // mg
-                iron: 45 // mg
+                iron: 45, // mg
+                magnesium: 420, // mg
+                zinc: 40, // mg
+                omega3: 3000, // mg
+                fiber: 40, // g
+                probiotics: 100 // billion CFU
             };
             
             if (isNaN(age) || isNaN(weight)) {
