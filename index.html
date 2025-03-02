@@ -99,25 +99,19 @@
     </div>
 
     <script>
-        const recommendedIntake = {
-            vitaminC: { name: "비타민 C (Vitamin C)", value: 90 },
-            vitaminD: { name: "비타민 D (Vitamin D)", value: 15 },
-            calcium: { name: "칼슘 (Calcium)", value: 1000 },
-            iron: { name: "철분 (Iron)", value: 18 },
-            magnesium: { name: "마그네슘 (Magnesium)", value: 400 },
-            zinc: { name: "아연 (Zinc)", value: 11 },
-            omega3: { name: "오메가3 (Omega-3)", value: 250 },
-            fiber: { name: "식이섬유 (Fiber)", value: 25 },
-            probiotics: { name: "프로바이오틱스 (Probiotics)", value: 10 }
-        };
-
         function calculateOverdose() {
             let resultDiv = document.getElementById("result");
             resultDiv.innerHTML = "<h3>✅ 영양제 섭취량 분석 결과</h3>";
+            let supplements = document.querySelectorAll(".supplement");
+            if (supplements.length === 0) {
+                resultDiv.innerHTML += "<p class='warning'>⚠️ 영양제를 추가해주세요!</p>";
+                return;
+            }
+            
             document.querySelectorAll(".supplement").forEach((supplement, index) => {
                 let intake = parseFloat(document.querySelectorAll(".intake")[index].value);
                 let nutrient = supplement.value;
-                let recommended = recommendedIntake[nutrient].value;
+                let recommended = recommendedIntake[nutrient]?.value || 0;
                 let status = intake > recommended ? "🔴 과다 복용" : intake < recommended ? "🟡 부족" : "🟢 적정";
                 resultDiv.innerHTML += `<p>${recommendedIntake[nutrient].name}: ${intake} mg (${status})</p>`;
             });
