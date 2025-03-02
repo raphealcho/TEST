@@ -30,6 +30,20 @@
             margin-bottom: 15px;
             text-align: left;
         }
+        label {
+            font-weight: bold;
+            display: block;
+            margin-bottom: 5px;
+        }
+        input, select {
+            width: 100%;
+            padding: 10px;
+            margin-top: 5px;
+            border-radius: 5px;
+            border: 1px solid #ddd;
+            font-size: 16px;
+            text-align: center;
+        }
         .result {
             margin-top: 20px;
             font-weight: bold;
@@ -49,6 +63,7 @@
             padding: 10px;
             border-radius: 5px;
             cursor: pointer;
+            font-size: 16px;
         }
         .link-container button:hover {
             background-color: #0056b3;
@@ -59,19 +74,23 @@
     <div class="container">
         <h2>영양제 섭취량 & 과다 복용 계산기</h2>
         <div class="input-group">
-            <label for="age">나이:</label>
+            <label for="age">🧑 나이:</label>
             <input type="number" id="age" placeholder="나이 입력">
         </div>
         <div class="input-group">
-            <label for="gender">성별:</label>
+            <label for="gender">🚻 성별:</label>
             <select id="gender">
                 <option value="male">남성</option>
                 <option value="female">여성</option>
             </select>
         </div>
         <div class="input-group">
-            <label for="weight">몸무게 (kg):</label>
+            <label for="weight">⚖️ 몸무게 (kg):</label>
             <input type="number" id="weight" placeholder="몸무게 입력">
+        </div>
+        <div class="input-group" id="supplement-container">
+            <label>💊 영양제 선택 및 복용량:</label>
+            <button onclick="addSupplement()">+ 영양제 추가</button>
         </div>
         <button onclick="calculateOverdose()">계산하기</button>
         <div id="result" class="result"></div>
@@ -79,36 +98,35 @@
     </div>
 
     <script>
+        function addSupplement() {
+            let container = document.getElementById("supplement-container");
+            let div = document.createElement("div");
+            div.classList.add("input-group");
+            div.innerHTML = `
+                <select class="supplement">
+                    <option value="vitaminC">비타민 C (Vitamin C) - 면역력 강화</option>
+                    <option value="vitaminD">비타민 D (Vitamin D) - 뼈 건강</option>
+                    <option value="calcium">칼슘 (Calcium) - 골밀도 유지</option>
+                    <option value="iron">철분 (Iron) - 혈액 건강</option>
+                    <option value="magnesium">마그네슘 (Magnesium) - 신경 및 근육 기능</option>
+                    <option value="zinc">아연 (Zinc) - 면역력 및 피부 건강</option>
+                    <option value="omega3">오메가3 (Omega-3) - 심혈관 건강</option>
+                    <option value="fiber">식이섬유 (Fiber) - 소화 건강</option>
+                    <option value="probiotics">프로바이오틱스 (Probiotics) - 장 건강</option>
+                </select>
+                <input type="number" class="intake" placeholder="섭취량 (mg) 입력">
+            `;
+            container.appendChild(div);
+        }
+
         function calculateOverdose() {
-            let age = parseInt(document.getElementById("age").value);
-            let gender = document.getElementById("gender").value;
-            let weight = parseFloat(document.getElementById("weight").value);
             let resultDiv = document.getElementById("result");
-            resultDiv.innerHTML = "";
-
-            if (isNaN(age) || isNaN(weight)) {
-                resultDiv.innerHTML = "⚠️ 유효한 나이와 몸무게를 입력하세요.";
-                resultDiv.classList.add("warning");
-                return;
-            }
-
-            let recommendedIntake = {
-                vitaminC: gender === "male" ? 90 : 75, // mg
-                vitaminD: 15, // mcg (600 IU) 공통
-                calcium: age > 50 ? 1200 : 1000, // mg
-                iron: gender === "female" && age < 50 ? 18 : 8, // mg
-                magnesium: 400, // mg
-                zinc: 11, // mg
-                omega3: 250, // mg (EPA + DHA 기준)
-                fiber: 25, // g
-                probiotics: 10 // billion CFU
-            };
-
-            resultDiv.innerHTML += `<p>✅ 권장 섭취량:</p>`;
-            Object.keys(recommendedIntake).forEach(nutrient => {
-                resultDiv.innerHTML += `<p>${nutrient}: ${recommendedIntake[nutrient]} mg</p>`;
+            resultDiv.innerHTML = "✅ 권장 섭취량:";
+            document.querySelectorAll(".supplement").forEach((supplement, index) => {
+                let intake = document.querySelectorAll(".intake")[index].value;
+                let nutrient = supplement.options[supplement.selectedIndex].text;
+                resultDiv.innerHTML += `<p>${nutrient}: ${intake} mg</p>`;
             });
-
             showRecommendationLinks();
         }
 
