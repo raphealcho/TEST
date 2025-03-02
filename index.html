@@ -122,6 +122,34 @@
             `;
             container.appendChild(div);
         }
+
+        function showRecommendationLinks() {
+            let linksContainer = document.getElementById("recommend-links");
+            linksContainer.innerHTML = "<h3>추천 영양제</h3>";
+            let recommendations = [
+                {text: "20대 추천 영양제", url: "https://www.coupang.com/vp/products/7460287402"},
+                {text: "30대 추천 영양제", url: "https://www.coupang.com/vp/products/7510360459"},
+                {text: "40대 추천 영양제", url: "https://www.coupang.com/vp/products/6437300567"},
+                {text: "50대 추천 영양제", url: "https://www.coupang.com/vp/products/7516421836"}
+            ];
+            recommendations.forEach(item => {
+                let button = document.createElement("button");
+                button.innerText = item.text;
+                button.onclick = function() {
+                    let countdown = 3;
+                    button.innerText = "3초 후에 추천 상품으로 이동합니다";
+                    let interval = setInterval(() => {
+                        button.innerText = `3초 후에 추천 상품으로 이동합니다 (${countdown}초)`;
+                        countdown--;
+                        if (countdown < 0) {
+                            clearInterval(interval);
+                            window.location.href = item.url;
+                        }
+                    }, 1000);
+                };
+                linksContainer.appendChild(button);
+            });
+        }
     </script>
 </body>
 </html>
