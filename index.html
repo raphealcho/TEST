@@ -99,6 +99,43 @@
     </div>
 
     <script>
+        // 새롭게 영양제 선택 및 복용량 입력 필드를 추가하는 함수
+        function addSupplement() {
+            const container = document.getElementById('supplement-container');
+            // 새로운 래퍼 div 생성
+            const supplementDiv = document.createElement('div');
+            supplementDiv.className = "supplement-item";
+            supplementDiv.style.marginTop = "10px";
+            
+            // 영양제 선택을 위한 select 생성
+            const select = document.createElement('select');
+            select.className = "supplement";
+            const options = [
+                {value: "비타민C", text: "비타민 C"},
+                {value: "비타민D", text: "비타민 D"},
+                {value: "칼슘", text: "칼슘"},
+                {value: "철분", text: "철분"}
+            ];
+            options.forEach(opt => {
+                const option = document.createElement('option');
+                option.value = opt.value;
+                option.text = opt.text;
+                select.appendChild(option);
+            });
+            
+            // 복용량 입력을 위한 input 생성
+            const input = document.createElement('input');
+            input.className = "intake";
+            input.type = "number";
+            input.placeholder = "복용량 입력 (mg)";
+            input.style.marginTop = "5px";
+            
+            // 생성한 요소들을 supplementDiv에 추가 후 컨테이너에 추가
+            supplementDiv.appendChild(select);
+            supplementDiv.appendChild(input);
+            container.appendChild(supplementDiv);
+        }
+
         function calculateOverdose() {
             let resultDiv = document.getElementById("result");
             resultDiv.innerHTML = "<h3>✅ 영양제 섭취량 분석 결과</h3>";
