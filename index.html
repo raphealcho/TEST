@@ -99,42 +99,16 @@
 
     <script>
         const recommendedIntake = {
-            vitaminC: 90,
-            vitaminD: 15,
-            calcium: 1000,
-            iron: 18,
-            magnesium: 400,
-            zinc: 11,
-            omega3: 250,
-            fiber: 25,
-            probiotics: 10
+            vitaminC: { name: "비타민 C (Vitamin C)", value: 90 },
+            vitaminD: { name: "비타민 D (Vitamin D)", value: 15 },
+            calcium: { name: "칼슘 (Calcium)", value: 1000 },
+            iron: { name: "철분 (Iron)", value: 18 },
+            magnesium: { name: "마그네슘 (Magnesium)", value: 400 },
+            zinc: { name: "아연 (Zinc)", value: 11 },
+            omega3: { name: "오메가3 (Omega-3)", value: 250 },
+            fiber: { name: "식이섬유 (Fiber)", value: 25 },
+            probiotics: { name: "프로바이오틱스 (Probiotics)", value: 10 }
         };
-
-        function addSupplement() {
-            let container = document.getElementById("supplement-container");
-            let div = document.createElement("div");
-            div.classList.add("input-group");
-            div.innerHTML = `
-                <select class="supplement">
-                    ${Object.keys(recommendedIntake).map(nutrient => `<option value="${nutrient}">${nutrient.toUpperCase()}</option>`).join('')}
-                </select>
-                <input type="number" class="intake" placeholder="섭취량 (mg) 입력">
-            `;
-            container.appendChild(div);
-        }
-
-        function calculateOverdose() {
-            let resultDiv = document.getElementById("result");
-            resultDiv.innerHTML = "✅ 권장 섭취량 결과:";
-            document.querySelectorAll(".supplement").forEach((supplement, index) => {
-                let intake = parseFloat(document.querySelectorAll(".intake")[index].value);
-                let nutrient = supplement.value;
-                let recommended = recommendedIntake[nutrient];
-                let status = intake > recommended ? "🔴 과다 복용" : intake < recommended ? "🟡 부족" : "🟢 적정";
-                resultDiv.innerHTML += `<p>${nutrient.toUpperCase()}: ${intake} mg (${status})</p>`;
-            });
-            showRecommendationLinks();
-        }
 
         function showRecommendationLinks() {
             let linksContainer = document.getElementById("recommend-links");
