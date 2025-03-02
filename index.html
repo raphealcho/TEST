@@ -9,12 +9,13 @@
             font-family: Arial, sans-serif;
             margin: 20px;
             text-align: center;
+            background-color: #f9f9f9;
         }
         .container {
-            max-width: 500px;
+            max-width: 600px;
             margin: auto;
             padding: 20px;
-            border: 1px solid #ddd;
+            background: white;
             border-radius: 10px;
             box-shadow: 2px 2px 10px rgba(0,0,0,0.1);
         }
@@ -26,45 +27,85 @@
             color: red;
             font-weight: bold;
         }
+        .input-group {
+            margin-bottom: 15px;
+            text-align: left;
+        }
+        label {
+            font-weight: bold;
+        }
+        input, select {
+            width: 100%;
+            padding: 8px;
+            margin-top: 5px;
+            border-radius: 5px;
+            border: 1px solid #ddd;
+        }
+        button {
+            background-color: #28a745;
+            color: white;
+            border: none;
+            padding: 10px;
+            width: 100%;
+            border-radius: 5px;
+            cursor: pointer;
+        }
+        button:hover {
+            background-color: #218838;
+        }
     </style>
 </head>
 <body>
     <div class="container">
         <h2>영양제 섭취량 & 과다 복용 계산기</h2>
-        <label for="age">나이:</label>
-        <input type="number" id="age" placeholder="나이 입력">
-        <br><br>
-        <label for="gender">성별:</label>
-        <select id="gender">
-            <option value="male">남성</option>
-            <option value="female">여성</option>
-        </select>
-        <br><br>
-        <label for="weight">몸무게 (kg):</label>
-        <input type="number" id="weight" placeholder="몸무게 입력">
-        <br><br>
-        <label for="supplement">영양제 선택:</label>
-        <select id="supplement">
-            <option value="vitaminC">비타민 C</option>
-            <option value="vitaminD">비타민 D</option>
-            <option value="calcium">칼슘</option>
-            <option value="iron">철분</option>
-        </select>
-        <br><br>
-        <label for="intake">복용량 (mg):</label>
-        <input type="number" id="intake" placeholder="섭취량 입력">
-        <br><br>
+        <div class="input-group">
+            <label for="age">나이:</label>
+            <input type="number" id="age" placeholder="나이 입력">
+        </div>
+        <div class="input-group">
+            <label for="gender">성별:</label>
+            <select id="gender">
+                <option value="male">남성</option>
+                <option value="female">여성</option>
+            </select>
+        </div>
+        <div class="input-group">
+            <label for="weight">몸무게 (kg):</label>
+            <input type="number" id="weight" placeholder="몸무게 입력">
+        </div>
+        <div class="input-group" id="supplement-container">
+            <label>영양제 선택 및 복용량:</label>
+            <button onclick="addSupplement()">+ 영양제 추가</button>
+        </div>
         <button onclick="calculateOverdose()">계산하기</button>
         <div id="result" class="result"></div>
     </div>
 
     <script>
+        function addSupplement() {
+            let container = document.getElementById("supplement-container");
+            let div = document.createElement("div");
+            div.classList.add("input-group");
+            div.innerHTML = `
+                <select class="supplement">
+                    <option value="vitaminC">비타민 C</option>
+                    <option value="vitaminD">비타민 D</option>
+                    <option value="calcium">칼슘</option>
+                    <option value="iron">철분</option>
+                </select>
+                <input type="number" class="intake" placeholder="섭취량 (mg) 입력">
+            `;
+            container.appendChild(div);
+        }
+
         function calculateOverdose() {
             let age = parseInt(document.getElementById("age").value);
             let gender = document.getElementById("gender").value;
             let weight = parseFloat(document.getElementById("weight").value);
-            let supplement = document.getElementById("supplement").value;
-            let intake = parseFloat(document.getElementById("intake").value);
+            let supplements = document.querySelectorAll(".supplement");
+            let intakes = document.querySelectorAll(".intake");
+            let resultDiv = document.getElementById("result");
+            resultDiv.innerHTML = "";
             
             let recommendedIntake = {
                 vitaminC: gender === "male" ? 90 : 75, // mg
@@ -80,27 +121,32 @@
                 iron: 45 // mg
             };
             
-            let resultDiv = document.getElementById("result");
-            
-            if (isNaN(intake) || intake <= 0 || isNaN(age) || isNaN(weight)) {
-                resultDiv.innerHTML = "⚠️ 유효한 값을 모두 입력하세요.";
+            if (isNaN(age) || isNaN(weight)) {
+                resultDiv.innerHTML = "⚠️ 유효한 나이와 몸무게를 입력하세요.";
                 resultDiv.classList.add("warning");
                 return;
             }
             
-            let recIntake = recommendedIntake[supplement];
-            let maxIntake = upperLimit[supplement];
-            
-            if (intake > maxIntake) {
-                resultDiv.innerHTML = `⚠️ 과다 복용 위험! (최대 권장량: ${maxIntake}mg)`;
-                resultDiv.classList.add("warning");
-            } else if (intake < recIntake) {
-                resultDiv.innerHTML = `🔹 권장량보다 적음 (${recIntake}mg 권장)`;
-                resultDiv.classList.remove("warning");
-            } else {
-                resultDiv.innerHTML = `✅ 적절한 복용량입니다! (권장: ${recIntake}mg, 최대: ${maxIntake}mg)`;
-                resultDiv.classList.remove("warning");
-            }
+            supplements.forEach((supplement, index) => {
+                let intake = parseFloat(intakes[index].value);
+                let type = supplement.value;
+                
+                if (isNaN(intake) || intake <= 0) {
+                    resultDiv.innerHTML += `<p class='warning'>⚠️ ${type}의 유효한 복용량을 입력하세요.</p>`;
+                    return;
+                }
+                
+                let recIntake = recommendedIntake[type];
+                let maxIntake = upperLimit[type];
+                
+                if (intake > maxIntake) {
+                    resultDiv.innerHTML += `<p class='warning'>⚠️ ${type} 과다 복용 위험! (최대: ${maxIntake}mg)</p>`;
+                } else if (intake < recIntake) {
+                    resultDiv.innerHTML += `<p>🔹 ${type} 권장량보다 적음 (권장: ${recIntake}mg)</p>`;
+                } else {
+                    resultDiv.innerHTML += `<p>✅ ${type} 적절한 복용량 (권장: ${recIntake}mg, 최대: ${maxIntake}mg)</p>`;
+                }
+            });
         }
     </script>
 </body>
