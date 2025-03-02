@@ -98,21 +98,25 @@
     </div>
 
     <script>
+        const recommendedIntake = {
+            vitaminC: 90,
+            vitaminD: 15,
+            calcium: 1000,
+            iron: 18,
+            magnesium: 400,
+            zinc: 11,
+            omega3: 250,
+            fiber: 25,
+            probiotics: 10
+        };
+
         function addSupplement() {
             let container = document.getElementById("supplement-container");
             let div = document.createElement("div");
             div.classList.add("input-group");
             div.innerHTML = `
                 <select class="supplement">
-                    <option value="vitaminC">비타민 C (Vitamin C) - 면역력 강화</option>
-                    <option value="vitaminD">비타민 D (Vitamin D) - 뼈 건강</option>
-                    <option value="calcium">칼슘 (Calcium) - 골밀도 유지</option>
-                    <option value="iron">철분 (Iron) - 혈액 건강</option>
-                    <option value="magnesium">마그네슘 (Magnesium) - 신경 및 근육 기능</option>
-                    <option value="zinc">아연 (Zinc) - 면역력 및 피부 건강</option>
-                    <option value="omega3">오메가3 (Omega-3) - 심혈관 건강</option>
-                    <option value="fiber">식이섬유 (Fiber) - 소화 건강</option>
-                    <option value="probiotics">프로바이오틱스 (Probiotics) - 장 건강</option>
+                    ${Object.keys(recommendedIntake).map(nutrient => `<option value="${nutrient}">${nutrient.toUpperCase()}</option>`).join('')}
                 </select>
                 <input type="number" class="intake" placeholder="섭취량 (mg) 입력">
             `;
@@ -121,11 +125,13 @@
 
         function calculateOverdose() {
             let resultDiv = document.getElementById("result");
-            resultDiv.innerHTML = "✅ 권장 섭취량:";
+            resultDiv.innerHTML = "✅ 권장 섭취량 결과:";
             document.querySelectorAll(".supplement").forEach((supplement, index) => {
-                let intake = document.querySelectorAll(".intake")[index].value;
-                let nutrient = supplement.options[supplement.selectedIndex].text;
-                resultDiv.innerHTML += `<p>${nutrient}: ${intake} mg</p>`;
+                let intake = parseFloat(document.querySelectorAll(".intake")[index].value);
+                let nutrient = supplement.value;
+                let recommended = recommendedIntake[nutrient];
+                let status = intake > recommended ? "🔴 과다 복용" : intake < recommended ? "🟡 부족" : "🟢 적정";
+                resultDiv.innerHTML += `<p>${nutrient.toUpperCase()}: ${intake} mg (${status})</p>`;
             });
             showRecommendationLinks();
         }
@@ -134,19 +140,24 @@
             let linksContainer = document.getElementById("recommend-links");
             linksContainer.innerHTML = "<h3>추천 영양제</h3>";
             let recommendations = [
-                {text: "20대 추천 영양제", url: "https://www.coupang.com/vp/products/7460287402?itemId=20000650509&vendorItemId=81352051865"},
-                {text: "30대 추천 영양제", url: "https://www.coupang.com/vp/products/7510360459?itemId=19677593381&vendorItemId=85577504349"},
-                {text: "40대 추천 영양제", url: "https://www.coupang.com/vp/products/6437300567?itemId=6232749994&vendorItemId=89656081645"},
-                {text: "50대 추천 영양제", url: "https://www.coupang.com/vp/products/7516421836?itemId=19789923845&vendorItemId=86892556379"}
+                {text: "20대 추천 영양제", url: "https://www.coupang.com/vp/products/7460287402"},
+                {text: "30대 추천 영양제", url: "https://www.coupang.com/vp/products/7510360459"},
+                {text: "40대 추천 영양제", url: "https://www.coupang.com/vp/products/6437300567"},
+                {text: "50대 추천 영양제", url: "https://www.coupang.com/vp/products/7516421836"}
             ];
             recommendations.forEach(item => {
                 let button = document.createElement("button");
                 button.innerText = item.text;
                 button.onclick = function() {
-                    linksContainer.innerHTML += "<p>3초 후 자동으로 상품으로 이동됩니다...</p>";
-                    setTimeout(() => {
-                        window.location.href = item.url;
-                    }, 3000);
+                    let countdown = 3;
+                    let interval = setInterval(() => {
+                        button.innerText = `${item.text} (${countdown}초)`;
+                        countdown--;
+                        if (countdown < 0) {
+                            clearInterval(interval);
+                            window.location.href = item.url;
+                        }
+                    }, 1000);
                 };
                 linksContainer.appendChild(button);
             });
