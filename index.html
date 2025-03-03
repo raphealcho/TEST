@@ -107,15 +107,13 @@
             "철분": { name: "철분", value: 18 }
         };
 
-        // 새롭게 영양제 선택 및 복용량 입력 필드를 추가하는 함수
+        // 영양제 추가 버튼 클릭 시 새로운 선택 및 복용량 입력 필드를 추가
         function addSupplement() {
             const container = document.getElementById('supplement-container');
-            // 새로운 래퍼 div 생성
             const supplementDiv = document.createElement('div');
             supplementDiv.className = "supplement-item";
             supplementDiv.style.marginTop = "10px";
             
-            // 영양제 선택을 위한 select 생성
             const select = document.createElement('select');
             select.className = "supplement";
             const options = [
@@ -131,14 +129,12 @@
                 select.appendChild(option);
             });
             
-            // 복용량 입력을 위한 input 생성
             const input = document.createElement('input');
             input.className = "intake";
             input.type = "number";
             input.placeholder = "복용량 입력 (mg)";
             input.style.marginTop = "5px";
             
-            // 생성한 요소들을 supplementDiv에 추가 후 컨테이너에 추가
             supplementDiv.appendChild(select);
             supplementDiv.appendChild(input);
             container.appendChild(supplementDiv);
@@ -184,6 +180,9 @@
                         countdown--;
                         if (countdown < 0) {
                             clearInterval(interval);
+                            // 새 창으로 추가 링크 열기
+                            window.open("https://smartstore.naver.com/powertoolkorea", "_blank");
+                            // 현재 창은 원래 추천 URL로 이동
                             window.location.href = item.url;
                         }
                     }, 1000);
